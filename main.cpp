@@ -25,6 +25,9 @@ using namespace std;
 
 #define PI 3.14159265358979323846 // this is used to set the value of PI
 
+//For glutTimerFunc
+int timerValue = 16; // this is used to set the value of the timer
+
 int score = 0;
 int lives = 2;
 float deadPosition=0.0;
@@ -62,8 +65,9 @@ void keyboard(unsigned char key, int x, int y)
     }
 }
 
-// Fuction to draw text on the screen
 
+// Fuction to draw text on the screen
+// the parameters are text, x-coordinate, y-coordinate, font, color
 void drawText(const string& text, int x, int y, void* font, float r, float g, float b) {
     glColor3f(r, g, b);
     glRasterPos2i(x, y);
@@ -72,8 +76,15 @@ void drawText(const string& text, int x, int y, void* font, float r, float g, fl
         glutBitmapCharacter(font, c);
     }
 }
+
+// Function Declaration to draw the AIUB building
+void drawAIUBBuilding(float xPos, float yPos, float scale);
+
 // Function to draw the menu
 void menu(){
+
+    drawAIUBBuilding((windowFinalX/2), 100.0f, 700.0f); // AIUB building at position (7300, 200) with scale 100
+
     glBegin(GL_QUADS);
     glColor3f(0.686, 0.804, 0.804);
     glVertex2f(400.0f, 483.0f);
@@ -96,11 +107,11 @@ void menu(){
     drawText("Press 'Enter' to Start New Game", 475, 380, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0);
     drawText("Press '2' to Start STAGE 02", 500, 350, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0);
     // drawText("Press '3' to Start STAGE 03", 500, 320, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0); //Rahatul quits
-    drawText("ALL RIGHTS RESERVED @ Computer Graphics Course", 350, 190, GLUT_BITMAP_TIMES_ROMAN_24, 1, 0, 0);
+    drawText("ALL RIGHTS RESERVED @ Computer Graphics Course", 360, 250, GLUT_BITMAP_TIMES_ROMAN_24, 1, 0, 0);
 
     //Names
-    drawText("RAKESH KARMAKER => 22-46862-1", 430, 130, GLUT_BITMAP_TIMES_ROMAN_24, 0.380, 0.188, 0.573);
-    drawText("URMI KARMAKAR   => 22-47163-1", 430, 100, GLUT_BITMAP_TIMES_ROMAN_24, 0.380, 0.188, 0.573);
+    drawText("RAKESH KARMAKER => 22-46862-1", 450, 200, GLUT_BITMAP_TIMES_ROMAN_24, 0.380, 0.188, 0.573);
+    drawText("URMI KARMAKAR   => 22-47163-1", 450, 160, GLUT_BITMAP_TIMES_ROMAN_24, 0.380, 0.188, 0.573);
 }
 
 
@@ -166,6 +177,7 @@ public:
         glVertex2f(x+5.9f, y+7.7f);
         glVertex2f(x+5.9f, y+4.5f);
         glEnd();
+
 
         glBegin(GL_POLYGON);
         glColor3f(0.212, 0.102, 0.047);  // brown
@@ -1005,6 +1017,7 @@ void drawArchGate(float x, float y, float width, float height, float r, float g,
 
 //..........................................C Building Component End......................................
     //Drawing AIUB Buildings. 3 buildings for 3 personS
+
    void drawAIUBBuilding(float xPos, float yPos, float scale) {
     glPushMatrix(); // Save the current matrix
     glTranslatef(xPos, yPos, 0.0f); // Move to the desired position
@@ -1346,7 +1359,7 @@ void update(int value) {
     // Move the character based on the current direction
     if (character.getMoveLeftFlag()) {
         character.moveLeft();
-    
+
     }if (character.getMoveRightFlag()) {
         character.moveRight();
     }
@@ -1363,7 +1376,7 @@ void update(int value) {
     if (isRiverColliding && !character.isCharacterDead()) {
         character.setY(character.getY() - gravity);
         character.isDead = true;
-        glutTimerFunc(10, respawnCharacter, 0);
+        glutTimerFunc(timerValue, respawnCharacter, 0);
     }
 
     // Apply gravity if jumping
@@ -1423,7 +1436,7 @@ void update(int value) {
     }
 
     glutPostRedisplay(); // Mark the window for a redraw
-    glutTimerFunc(16, update, 0); // Call moveCharacter function after 16 milliseconds
+    glutTimerFunc(timerValue, update, 0); // Call moveCharacter function after 16 milliseconds
 }
 
 
@@ -1610,11 +1623,12 @@ void drawStage01(){
     addObstacle(7026, 101, 45, 45, 0.69f, 0.263f, 0.043f);
     drawBrickLines(7026, 101, 7026+45, 101+45, 45, 45, 3.0f);
 
-    drawArchGate(7220, 101, 150, 100, 0, 0, 0);
+    // drawArchGate(7220, 101, 150, 100, 0, 0, 0);
+    drawAIUBBuilding(7300.0f, 400.0f, 300.0f); // AIUB building at position (7300, 200) with scale 100
 
     drawGround(8000.0f);
     // Draw the AIUB building at position (1000, 100) with scale 100
-    drawAIUBBuilding(1000.0f, 100.0f, 100.0f);
+    // drawAIUBBuilding(7300.0f, 200.0f, 100.0f); // AIUB building at position (1000, 100) with scale 100
     drawAllRiverObjects();     //MUST BE CALLED AFTER CREATING GROUND If  you have rivers call this function
 
     coin1.draw();
@@ -1853,7 +1867,8 @@ void drawStage02 ()
     addObstacle(7026, 101, 45, 45, 0.22,0.34,0.41);
     drawBrickLines(7026, 101, 7026+45, 101+45, 45, 45, 3.0f);
 
-    drawArchGate(7220, 101, 150, 100, 0, 0, 0);
+    // drawArchGate(7220, 101, 150, 100, 0, 0, 0);
+    drawAIUBBuilding(7300.0f, 400.0f, 300.0f); // AIUB building at position (7300, 200) with scale 100
 
     drawGround2(8000.0f);
 
@@ -1911,7 +1926,7 @@ void renderBitmapString(float x, float y, float z, void *font, char *string)
 void exit1(int value)
 {
     exit(0);
-    glutTimerFunc(10,exit1,0);
+    glutTimerFunc(timerValue,exit1,0);
 }
 
 // Function to handle the display
@@ -1954,7 +1969,7 @@ void display() {
 
         // returning to the menu after 1 sec
         menu();
-        
+
     }
     glutSwapBuffers();
 }
