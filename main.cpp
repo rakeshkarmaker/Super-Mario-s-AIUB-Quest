@@ -3,26 +3,27 @@
 #include <iostream>
 #include <vector>
 #include<cmath>
-using namespace std;
 
+using namespace std;
 //........................## Global Variable Start.................................
 
-#define charSize 60.0f
-#define charInitialX 0.0f
-#define charInitialY 100.0f
-#define initialSpeed 7.0f
-#define initialVelocity  21.0f
-#define gravity 1.0f
-#define respawnDelay 0
-#define windowInitialX 0.0f
-#define windowInitialY 0.0f
-#define windowFinalX 1280.0f
-#define windowFinalY 720.0f
-#define coordinateX 1280
-#define coordinateY 720
-#define PI 3.14159265358979323846
+#define charSize 60.0f // this is used to set the size of the character
+#define charInitialX 0.0f // this is used to set the initial x-coordinate of the character
+#define charInitialY 100.0f //  this is used to set the initial y-coordinate of the character
+#define initialSpeed 7.0f //    this is used to set the initial speed of the character
+#define initialVelocity  21.0f //   this is used to set the initial velocity of the character
 
-//...........................## Global Variable end................................
+#define gravity 1.0f // this is used to set the gravity of the character
+#define respawnDelay 0 // this is used to set the respawn delay of the character
+
+#define windowInitialX 0.0f // this is used to set the initial x-coordinate of the window
+#define windowInitialY 0.0f //  this is used to set the initial y-coordinate of the window
+#define windowFinalX 1280.0f // this is used to set the final x-coordinate of the window
+#define windowFinalY 720.0f //  this is used to set the final y-coordinate of the window
+#define coordinateX 1280 // this is used to set the x-coordinate of the window
+#define coordinateY 720 //  this is used to set the y-coordinate of the window
+
+#define PI 3.14159265358979323846 // this is used to set the value of PI
 
 int score = 0;
 int lives = 2;
@@ -31,9 +32,10 @@ int obstacleClearCount =3;
 
 bool isStage1 = false;
 bool isStage2 = false;
-bool isStage3 = false;
-bool allStage = false;
+// bool isStage3 = false;
+// bool allStage = false;
 bool winner = false;
+//...........................## Global Variable end................................
 
 //.......................................## Menu Start.................................
 
@@ -43,17 +45,14 @@ void keyboard(unsigned char key, int x, int y)
     switch (key)
     {
     case 13: // Enter
+        if(isStage1 || isStage2 ||winner) break; // Here, if the game is already started, then the game will not start again
         isStage1 = true;
         glutPostRedisplay(); // Mark the window for a redraw
         break;
 
     case 50: // Numpad 2 key
+        if(isStage1 || isStage2 ||winner) break; // Here, if the game is already started, then the game will not start again
         isStage2 = true;
-        glutPostRedisplay();
-        break;
-
-    case 51: // Numpad 3 key
-        isStage3 = true;
         glutPostRedisplay();
         break;
 
@@ -96,7 +95,7 @@ void menu(){
     drawText("START NEW GAME", 532, 420, GLUT_BITMAP_TIMES_ROMAN_24,0.337, 0.051, 0.051);
     drawText("Press 'Enter' to Start New Game", 475, 380, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0);
     drawText("Press '2' to Start STAGE 02", 500, 350, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0);
-    drawText("Press '3' to Start STAGE 03", 500, 320, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0);
+    // drawText("Press '3' to Start STAGE 03", 500, 320, GLUT_BITMAP_TIMES_ROMAN_24, 0.580, 0, 0); //Rahatul quits
     drawText("ALL RIGHTS RESERVED @ Computer Graphics Course", 350, 190, GLUT_BITMAP_TIMES_ROMAN_24, 1, 0, 0);
 
     //Names
@@ -108,7 +107,6 @@ void menu(){
 //.............................................Menu End.................................................
 
 //............................................## Character Class Start.........................................
-
 class Character {
 private:
     float x;
@@ -135,9 +133,9 @@ public:
     void setY(float y) { this->y = y; }
     void setJumpVelocity (float velocity) { jumpVelocity = velocity; }
     void setCurrentJumpVelocity (float velocity) { currentJumpVelocity = velocity; }
-    void setCharacterDead(bool dead) { isDead = dead; }
     void setJumping(bool jump) { isJumping = jump; }
     void setSpeed(float speed) {this->speed = speed;}
+    void setCharacterDead(bool dead) { isDead = dead; }
 
     //Getters
     float getJumpVelocity () { return jumpVelocity; }
@@ -440,31 +438,23 @@ public:
                 x = 0.0;
                 isStage1= false;
                 isStage2= true;
-                glutPostRedisplay();
+                glutPostRedisplay(); // Mark the window for a redraw
             }
         }
         if(isStage2){
             if (x > 7300) {
                 x = 0.0;
                 isStage2= false;
-                isStage3= true;
-                glutPostRedisplay();
-            }
-        }
-        if(isStage3){
-            if (x > 7300) {
-                x = 0.0;
-                isStage3= false;
                 winner= true;
-                glutPostRedisplay();
+                glutPostRedisplay(); // Mark the window for a redraw
             }
         }
     }
 
     void jump() {
-        if (!isJumping) {
-            isJumping = true;
-            currentJumpVelocity = jumpVelocity;
+        if (!isJumping) { // If the character is not already jumping, then jump
+            isJumping = true; // Set the jumping flag to true
+            currentJumpVelocity = jumpVelocity;// Set the current jump velocity to the initial jump velocity
         }
     }
 
@@ -709,7 +699,7 @@ public:
             // Bounding boxes do not intersect, so no collision
             return false;
         } else {
-            // Bounding boxes intersect, so collision
+            // Bounding boxes intersect, so collision occurred
             return true;
         }
 
@@ -742,7 +732,7 @@ public:
     void draw() const {
         glColor3f(colorR, colorG, colorB);
 
-        glBegin(GL_QUADS);
+        glBegin(GL_QUADS); // Draw the river as a rectangle
         glVertex2f(rivX, rivY);
         glVertex2f(rivX + rivWidth, rivY);
         glVertex2f(rivX + rivWidth, rivY + rivHeight);
@@ -1033,29 +1023,8 @@ void drawArchGate(float x, float y, float width, float height, float r, float g,
     Coin coin11(5246, 462, 20.0f, 1.0f, 0.843f, 0.0f); // Yellow coin
 
 
+
     // Stage 02 Coins
-    Coin coin41(540 , 230, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin42(830 , 330, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin43(950 , 530, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin44(1240 , 190, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin45(1430 , 390, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin46(1835 , 540, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin47(2000 , 540, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin48(2445 , 190, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin49(2885 , 190, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin50(3255 , 335, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin51(3670 , 490, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin52(3850 , 490, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin53(4290 , 440, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin54(4865 , 290, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin55(5280 , 490, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin56(5410 , 490, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin57(5555 , 490, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin58(5890 , 190, 20.0f, 1.0f, 0.843f, 0.0f);
-    Coin coin59(6270 , 330, 20.0f, 1.0f, 0.843f, 0.0f);
-
-
-    // Stage 03 Coins
     Coin coin14(1230, 335, 20.0f, 1.0f, 0.843f, 0.0f); // Yellow coin
     Coin coin15(1290, 460, 20.0f, 1.0f, 0.843f, 0.0f); // Yellow coin
     Coin coin16(1410, 460, 20.0f, 1.0f, 0.843f, 0.0f); // Yellow coin
@@ -1167,8 +1136,10 @@ void update(int value) {
     float prevCharacterY = character.getY();
 
 
+    //### Here, We are Checking for collision with the coins
+
     if(isStage1){   // Stage 01 Coins
-        coin1.checkCoinCollision(character);
+        coin1.checkCoinCollision(character); // this is the first coin of stage 01
         coin2.checkCoinCollision(character);
         coin3.checkCoinCollision(character);
         coin4.checkCoinCollision(character);
@@ -1178,35 +1149,12 @@ void update(int value) {
         coin8.checkCoinCollision(character);
         coin9.checkCoinCollision(character);
         coin10.checkCoinCollision(character);
-        coin11.checkCoinCollision(character);
+        coin11.checkCoinCollision(character); // this is the last coin of stage 01
 
     }
 
     if(isStage2){   // Stage 02 Coins
-        coin41.checkCoinCollision(character);
-        coin42.checkCoinCollision(character);
-        coin43.checkCoinCollision(character);
-        coin44.checkCoinCollision(character);
-        coin45.checkCoinCollision(character);
-        coin46.checkCoinCollision(character);
-        coin47.checkCoinCollision(character);
-        coin48.checkCoinCollision(character);
-        coin49.checkCoinCollision(character);
-        coin50.checkCoinCollision(character);
-        coin51.checkCoinCollision(character);
-        coin52.checkCoinCollision(character);
-        coin53.checkCoinCollision(character);
-        coin54.checkCoinCollision(character);
-        coin55.checkCoinCollision(character);
-        coin56.checkCoinCollision(character);
-        coin57.checkCoinCollision(character);
-        coin58.checkCoinCollision(character);
-        coin59.checkCoinCollision(character);
-
-    }
-
-    if(isStage3){   // Stage 03 Coins
-        coin14.checkCoinCollision(character);
+        coin14.checkCoinCollision(character);   // this is the first coin of stage 02
         coin15.checkCoinCollision(character);
         coin16.checkCoinCollision(character);
         coin17.checkCoinCollision(character);
@@ -1232,22 +1180,23 @@ void update(int value) {
         coin37.checkCoinCollision(character);
         coin38.checkCoinCollision(character);
         coin39.checkCoinCollision(character);
-        coin40.checkCoinCollision(character);
+        coin40.checkCoinCollision(character); // this is the last coin of stage 02
+
     }
 
     // Move the character based on the current direction
     if (character.getMoveLeftFlag()) {
         character.moveLeft();
-    }
-    if (character.getMoveRightFlag()) {
+    
+    }if (character.getMoveRightFlag()) {
         character.moveRight();
     }
 
     // Check for collision with obstacles and handle accordingly
     bool isObstacleCollision = checkAllObstacleCollisions(character);
-    if (isObstacleCollision) {
+    if (isObstacleCollision) { // This means the character has collided with an obstacle
         // Restore the previous character position
-        character.setX(prevCharacterX);
+        character.setX(prevCharacterX); //by setting to previous position, character will not move through the obstacle
     }
 
     // Check for collision with the river, and handle accordingly
@@ -1527,202 +1476,13 @@ void drawStage01(){
 }
 
 
+
 //---------------------------- STAGE 02 --------------------------------------------------------
 
 
-void drawStage02()
+void drawStage02 ()
 {
     isStage2 = true;
-
-    drawAllObstacleObjects();  // If you have obstacles call this function
-
-    drawCloud(0,640);
-    drawCloud(750, 640);
-
-    // ------------ GROUND --------------
-    addObstacle(0, 0, 300 ,100, 0.69f, 0.263f, 0.043f);
-    drawBrickLines(0, 0, 300, 100, 50, 50, 3);
-
-    addRiver(300, 0, 200, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(500, 0, 100 , 150, 0.69f, 0.263f, 0.043f); // 1st block
-    drawBorder(500, 0, 500+100, 150,3.0f);
-    drawBrickLines(500, 0, 500+100, 150, 50, 50, 3);
-    addObstacle(450, 150, 200 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(450, 150, 450+200 , 150+50, 3.0f);
-
-    addRiver(600, 0, 200, 100,0.55f, 0.53f, 0.94f);
-
-    addObstacle(800, 0, 300 , 250, 0.69f, 0.263f, 0.043f); //2nd block
-    drawBorder(800, 0, 800+300, 250,3.0f);
-    drawBrickLines(800, 0, 800+300, 250, 50, 50, 3);
-    addObstacle(750, 250, 400 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(750, 250, 750+400 , 250+50, 3.0f);
-
-    addObstacle(900, 300, 150 , 150, 0.69f, 0.263f, 0.043f); //2nd block upper
-    drawBorder(900, 300, 900+150, 300+150,3.0f);
-    drawBrickLines(900, 300, 900+150, 300+150, 50, 50, 3);
-    addObstacle(850, 450, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(850, 450, 850+250 , 450+50, 3.0f);
-
-    addRiver(1100, 0, 100, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(1200, 0, 50 , 100, 0.69f, 0.263f, 0.043f); //3rd block
-    drawBorder(1200, 0, 1200+50, 100,3.0f);
-    drawBrickLines(1200, 0, 1200+50, 100, 50, 50, 3);
-    addObstacle(1150, 100, 150 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(1150, 100, 1150+150 , 100+50, 3.0f);
-
-    addRiver(1250, 0, 100, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(1350, 0, 150 , 300, 0.69f, 0.263f, 0.043f); //4th block
-    drawBorder(1350, 0, 1350+150, 300,3.0f);
-    drawBrickLines(1350, 0, 1350+150, 300, 50,50, 3);
-    addObstacle(1300, 300, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(1300, 300, 1300+250 , 300+50, 3.0f);
-
-    addRiver(1500, 0, 300, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(1800, 0, 300 , 450, 0.69f, 0.263f, 0.043f); //5th block
-    drawBorder(1800, 0, 1800+300, 450,3.0f);
-    drawBrickLines(1800, 0, 1800+300, 450, 50,50, 3);
-    addObstacle(1750, 450, 400 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(1750, 450, 1750+400 , 450+50, 3.0f);
-
-    addRiver(2100, 0, 300, 100,0.55f, 0.53f, 0.94f);
-
-    addObstacle(2400, 0, 150 , 100, 0.69f, 0.263f, 0.043f); //6th block
-    drawBorder(2400, 0, 2400+150, 100,3.0f);
-    drawBrickLines(2400, 0, 2400+150, 100, 50,50, 3);
-    addObstacle(2350, 100, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(2350, 100, 2350+250 , 100+50, 3.0f);
-
-    addRiver(2550, 0, 300, 100, 0.55f, 0.53f, 0.94f);
-
-    drawCloud(2700, 550);
-
-    addObstacle(2850, 0, 150 , 100, 0.69f, 0.263f, 0.043f); //7th block
-    drawBorder(2850, 0, 2850+150, 100,3.0f);
-    drawBrickLines(2850, 0, 2850+150, 100, 50,50, 3);
-    addObstacle(2800, 100, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(2800, 100, 2800+250 , 100+50, 3.0f);
-
-    addRiver(3000, 0, 200, 100,0.55f, 0.53f, 0.94f);
-
-    addObstacle(3200, 0, 80 , 250, 0.69f, 0.263f, 0.043f); //8th block
-    drawBorder(3200, 0, 3200+80, 250,3.0f);
-    drawBrickLines(3200, 0, 3200+80, 250, 50,50, 3);
-    addObstacle(3150, 250, 180 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(3150, 250, 3150+180 , 250+50, 3.0f);
-
-    addRiver(3280, 0, 370, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(3650, 0, 200 , 400, 0.69f, 0.263f, 0.043f); //9th block
-    drawBorder(3650, 0, 3650+200, 400,3.0f);
-    drawBrickLines(3650, 0, 3650+200, 400, 50, 50, 3);
-    addObstacle(3600, 400, 300 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(3600, 400, 3600+300 , 400+50, 3.0f);
-
-    addRiver(3850, 0, 950, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(4200, 350, 200 , 50, 0.69f, 0.263f, 0.043f); //floating  block
-    drawBorder(4200, 350, 4200+200, 350+50,3.0f);
-    drawBrickLines(4200, 350, 4200+200, 350+50, 50,50, 3);
-
-    drawCloud(4500, 640);
-
-    addObstacle(4800, 0, 150 , 200, 0.69f, 0.263f, 0.043f); //10th block
-    drawBorder(4800, 0, 4800+150, 200,3.0f);
-    drawBrickLines(4800, 0, 4800+150, 200, 50,50, 3);
-    addObstacle(4750, 200, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(4750, 200, 4750+250 , 200+50, 3.0f);
-
-    addRiver(4950, 0, 300, 100,0.55f, 0.53f, 0.94f);
-
-    addObstacle(5250, 0, 350 , 400, 0.69f, 0.263f, 0.043f); //11th block
-    drawBorder(5250, 0, 5250+350, 400,3.0f);
-    drawBrickLines(5250, 0, 5250+350, 400, 50,50, 3);
-    addObstacle(5200, 400, 450 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(5200, 400, 5200+450 , 400+50, 3.0f);
-
-    addRiver(5600, 0, 250, 100,0.55f, 0.53f, 0.94f);
-
-    addObstacle(5850, 0, 100 , 100, 0.69f, 0.263f, 0.043f); //12th block
-    drawBorder(5850, 0, 5850+100, 100,3.0f);
-    drawBrickLines(5850, 0, 5850+100, 100,50,50, 3);
-    addObstacle(5800, 100, 200 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(5800, 100, 5800+200 , 100+50, 3.0f);
-
-    addRiver(5950, 0, 250, 100, 0.55f, 0.53f, 0.94f);
-
-    addObstacle(6200, 0, 150 , 250, 0.69f, 0.263f, 0.043f); //13th block
-    drawBorder(6200, 0, 6200+150, 250,3.0f);
-    drawBrickLines(6200, 0, 6200+150, 250, 50,50, 3);
-    addObstacle(6150, 250, 250 , 50, 0.f, 1.0f, 0.0f);
-    drawBorder(6150, 250, 6150+250 , 250+50, 3.0f);
-
-    addRiver(6350, 0, 150, 100,0.55f, 0.53f, 0.94f);
-
-    // ------------ GROUND --------------
-    addObstacle(6500, 0, 2000 ,100, 0.69f, 0.263f, 0.043f);
-    drawBrickLines(6500, 0, 6450+2000, 100, 50, 50, 3);
-
-    drawCloud(6500, 640);
-
-    glBegin(GL_LINE_STRIP);
-    glLineWidth(50.0f);
-    glColor3f(0.616f, 0.992f, 0.094f);
-    glVertex2f(7048.5f, 147.0f);
-    glVertex2f(7048.5f, 570.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3f(0.9f, 0.9f, 0.9f);
-    glVertex2f(7048.5f, 570.0f);
-    glVertex2f(6998.5f, 570.0f);
-    glVertex2f(7048.5f, 520.0f);
-    glEnd();
-
-    addObstacle(7026, 101, 45, 45, 0.69f, 0.263f, 0.043f);
-    drawBrickLines(7026, 101, 7026+45, 101+45, 45, 45, 3.0f);
-
-    drawArchGate(7220, 101, 150, 100, 0, 0, 0);
-
-    drawAllRiverObjects();
-
-    coin41.draw();
-    coin42.draw();
-    coin43.draw();
-    coin44.draw();
-    coin45.draw();
-    coin46.draw();
-    coin47.draw();
-    coin48.draw();
-    coin49.draw();
-    coin50.draw();
-    coin51.draw();
-    coin52.draw();
-    coin53.draw();
-    coin54.draw();
-    coin55.draw();
-    coin56.draw();
-    coin57.draw();
-    coin58.draw();
-    coin59.draw();
-
-    character.draw();
-
-    drawScoreboard(character.getX());
-    drawLives(character.getX());
-}
-
-
-//---------------------------- STAGE 03 --------------------------------------------------------
-
-
-void drawStage03 ()
-{
-    isStage3 = true;
     drawAllObstacleObjects();  // If you have obstacles call this function
 
     addRiver(-700, 0, 698, 70, 0.3f, 0.518f, 0.984f);
@@ -1979,10 +1739,10 @@ whenever the window needs to be re-painted. */
 void renderBitmapString(float x, float y, float z, void *font, char *string)
 {
     char *c;
-    glRasterPos3f(x, y,z);
-    for (c=string; *c != '\0'; c++)
+    glRasterPos3f(x, y,z); //Specifies the raster position for pixel operations.
+    for (c=string; *c != '\0'; c++) //Loop through each character in the string
     {
-        glutBitmapCharacter(font, *c);
+        glutBitmapCharacter(font, *c); //Print each character on the screen
     }
 }
 
@@ -2006,23 +1766,13 @@ void display() {
         }
 
         else if(isStage2){
-             if (obstacleClearCount==3){
+             if (obstacleClearCount==2){
                 obstacles.clear();
                 rivers.clear();
                 obstacleClearCount--;
              }
             cameraMovement();
             drawStage02();
-        }
-
-        else if(isStage3){
-            if (obstacleClearCount==2){
-            obstacles.clear();
-            rivers.clear();
-            obstacleClearCount--;
-            }
-            cameraMovement();
-            drawStage03();
         }
         else if(winner){
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Set background color to black
@@ -2040,15 +1790,10 @@ void display() {
         }
     }
     else{
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Set background color to black
-        glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer (background)
 
-        glColor3f(1.0,0.0,0.0);
-        renderBitmapString(deadPosition, 400.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24, "GAME OVER");
-        drawText("Score: " + to_string(score), deadPosition, 360.0f, GLUT_BITMAP_TIMES_ROMAN_24, 1, 1, 1);
-        glFlush(); // Render now
-
-        glutTimerFunc(9000,exit1,0);
+        // returning to the menu after 1 sec
+        menu();
+        
     }
     glutSwapBuffers();
 }
