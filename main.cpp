@@ -999,7 +999,166 @@ void drawArchGate(float x, float y, float width, float height, float r, float g,
     glEnd();
 }
 
+
+
 //..........................................Stage Component End......................................
+
+//..........................................C Building Component End......................................
+    //Drawing AIUB Buildings. 3 buildings for 3 personS
+   void drawAIUBBuilding(float xPos, float yPos, float scale) {
+    glPushMatrix(); // Save the current matrix
+    glTranslatef(xPos, yPos, 0.0f); // Move to the desired position
+    glScalef(scale, scale, 1.0f); // Scale the building
+
+    // Set color for the building
+    glColor3ub(210, 210, 210);
+
+    // Draw the main circular structure
+    GLfloat x = 0.0f;
+    GLfloat y = 0.0f;
+    GLfloat radius = 0.5f;
+    int triangleAmount = 20; // Number of triangles used to draw the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y); // Center of the circle
+    for (int i = 0; i <= triangleAmount; i++) {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount)));
+    }
+    glEnd();
+
+    // Draw the base of the building
+    glBegin(GL_QUADS);
+    glColor3ub(210, 210, 210);
+    glVertex2f(-0.3, -0.3);
+    glVertex2f(0.3, -0.3);
+    glVertex2f(0.3, -0.6);
+    glVertex2f(-0.3, -0.6);
+    glEnd();
+
+    // Draw the top decorative strip
+    glBegin(GL_QUAD_STRIP);
+    glColor3ub(50, 50, 255);
+    glVertex2f(-0.45, 0.2);
+    glVertex2f(-0.4, 0.3);
+    glVertex2f(0.45, 0.2);
+    glVertex2f(0.4, 0.3);
+    glEnd();
+
+    // Draw the bottom decorative strip
+    glBegin(GL_QUAD_STRIP);
+    glColor3ub(50, 50, 255);
+    glVertex2f(-0.4, -0.3);
+    glVertex2f(-0.45, -0.2);
+    glVertex2f(0.4, -0.3);
+    glVertex2f(0.45, -0.2);
+    glEnd();
+
+    // Draw the middle horizontal strip
+    glBegin(GL_QUADS);
+    glColor3ub(50, 50, 255);
+    glVertex2f(-0.5, 0.05);
+    glVertex2f(0.5, 0.05);
+    glVertex2f(0.5, -0.05);
+    glVertex2f(-0.5, -0.05);
+    glEnd();
+
+    // Draw the platform at the bottom
+    glBegin(GL_QUADS);
+    glColor3ub(128, 128, 128);
+    glVertex2f(0.7, -1.0);
+    glVertex2f(0.7, -0.9);
+    glVertex2f(-0.7, -0.9);
+    glVertex2f(-0.7, -1.0);
+    glEnd();
+
+    // Draw the lower platform
+    glBegin(GL_QUADS);
+    glColor3ub(128, 128, 128);
+    glVertex2f(-0.6, -0.7);
+    glVertex2f(0.6, -0.7);
+    glVertex2f(0.6, -0.9);
+    glVertex2f(-0.6, -0.9);
+    glEnd();
+
+    // Draw the vertical lines (decorative elements)
+    glBegin(GL_LINES);
+    glColor3f(1, 1, 1);
+
+    // Left side lines
+    glVertex2f(-0.4, -0.9);
+    glVertex2f(-0.3, -0.7);
+
+    glVertex2f(-0.3, -0.7);
+    glVertex2f(-0.2, -0.9);
+
+    glVertex2f(-0.35, -0.8);
+    glVertex2f(-0.25, -0.8);
+
+    // Middle lines
+    glVertex2f(-0.1, -0.7);
+    glVertex2f(-0.1, -0.9);
+
+    glVertex2f(0.1, -0.7);
+    glVertex2f(0.1, -0.9);
+
+    glVertex2f(0.2, -0.7);
+    glVertex2f(0.2, -0.9);
+
+    glVertex2f(0.1, -0.9);
+    glVertex2f(0.2, -0.9);
+
+    // Right side lines
+    glVertex2f(0.3, -0.7);
+    glVertex2f(0.3, -0.9);
+
+    glVertex2f(0.4, -0.7);
+    glVertex2f(0.4, -0.9);
+
+    glVertex2f(0.3, -0.7);
+    glVertex2f(0.4, -0.7);
+
+    glVertex2f(0.3, -0.8);
+    glVertex2f(0.4, -0.8);
+
+    glVertex2f(0.3, -0.9);
+    glVertex2f(0.4, -0.9);
+
+    // Vertical support lines
+    glColor3ub(135, 76, 0);
+    glVertex2f(0.0, 0.0);
+    glVertex2f(0.0, -0.7);
+
+    glVertex2f(0.2, 0.0);
+    glVertex2f(0.2, -0.7);
+
+    glVertex2f(-0.2, 0.0);
+    glVertex2f(-0.2, -0.7);
+    glEnd();
+
+    // Draw the small decorative triangles
+    glBegin(GL_TRIANGLES);
+    glColor3f(0, 1, 0); // Green triangle
+    glVertex2f(0.0, 0.0);
+    glVertex2f(-0.1, -0.1);
+    glVertex2f(0.0, -0.1);
+
+    glColor3f(1, 0, 0); // Red triangle
+    glVertex2f(-0.2, 0.0);
+    glVertex2f(-0.3, -0.1);
+    glVertex2f(-0.2, -0.1);
+
+    glColor3ub(153, 0, 153); // Purple triangle
+    glVertex2f(0.2, 0.0);
+    glVertex2f(0.1, -0.1);
+    glVertex2f(0.2, -0.1);
+    glEnd();
+
+    glPopMatrix(); // Restore the original matrix
+}
+//..........................................C building Component End......................................
 
 // ......................................Creating Necessary Objects................................
 
@@ -1454,7 +1613,8 @@ void drawStage01(){
     drawArchGate(7220, 101, 150, 100, 0, 0, 0);
 
     drawGround(8000.0f);
-
+    // Draw the AIUB building at position (1000, 100) with scale 100
+    drawAIUBBuilding(1000.0f, 100.0f, 100.0f);
     drawAllRiverObjects();     //MUST BE CALLED AFTER CREATING GROUND If  you have rivers call this function
 
     coin1.draw();
@@ -1779,6 +1939,7 @@ void display() {
             glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer (background)
 
             glColor3f(1.0,0.0,0.0);
+            // drawAIUBBuilding(0, 0, 500, 500); // parameters: x, y, width, height
             renderBitmapString(7100, 400.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24, "Congratulation! You Won");
             drawText("Score: " + to_string(score), 7100, 360.0f, GLUT_BITMAP_TIMES_ROMAN_24, 1, 1, 1);
             glFlush(); // Render now
